@@ -1,0 +1,197 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>打字游戏</title>
+
+    <link rel="stylesheet" href="./animate.css">
+    <style>
+        body {
+            margin: 0;
+            /*开启弹性布局，并让弹性布局中的子元素
+            水平居中对齐，垂直居中对齐*/
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /*文字居中*/
+            text-align: center;
+            /*设置背景颜色的经像渐变*/
+            background: radial-gradient(circle, #444, #000, #000);
+        }
+
+        #char {
+            font-size: 400px;
+            color: lightgreen;
+            /*设置文字阴影*/
+            /*text-shadow: 水平位置 垂直位置 模糊距离 阴影颜色*/
+            /*位置可以为负值*/
+            text-shadow: 0 0 50px #666;
+        }
+
+        #result {
+            font-size: 20px;
+            color: #888;
+        }
+
+        /*找到id为char及类名为error的div元素*/
+        #char.error {
+            color: red;
+
+        }
+    </style>
+</head>
+<body>
+<mian>
+    <div id="char" class=""></div>
+    <!-- <div id="result">正确4个错误0个正确率100.00%</div> -->
+</mian>
+
+
+<script>
+    //来保存65~90之间的任意一个随机整数
+    var code;
+    //表示正确的次数
+    var okCount = 0;
+    //错误的次数
+    var errorCount = 0;
+    //获取显示字符的div
+    var charBox = document.getElementById('char');
+    //获取显示结果的div
+    var result = document.getElementById('result');
+
+    var charindex = 0;
+
+    var lasttimeout = -1;
+
+    //获取A~Z之间的任意一个字符
+    function show() {
+        //获取[0,1)之间的一个随机数
+        var rand = Math.random();
+        //获取一个0到26之间的一个随机数（不包含26）
+        code = rand * 26;
+        //Math.floor(a)对数字a向下取整，获取到一个小于等于a最近的整数
+        //获取0~25之间任意一个整数
+        code = Math.floor(code);
+        //获取到65~90之间的任意整数
+        code = code + 65;
+
+        code = charindex + 65;
+        charindex = (charindex + 1) % 26
+
+
+        //把Unicode的十进制编码转化成对应的字符
+        //获取A~Z的任意一个字符
+        var char = String.fromCharCode(code);
+        //console.log(char);
+        //把字符显示在界面上
+        charBox.innerHTML = char;
+
+        if(lasttimeout != -1){
+            clearTimeout(lasttimeout);
+        }
+
+        var playaudio = function () {
+            var audio = new Audio("audio/" + char.toLowerCase() + ".mp3");
+            audio.play();
+
+            lasttimeout = setTimeout(playaudio, 2000);
+        };
+
+        playaudio();
+
+    }
+
+    // show();//调用方法
+
+    function keyUpShow(keyCode) {
+        var innnerCode = keyCode;
+        //获取[0,1)之间的一个随机数
+        var rand = Math.random();
+        //获取一个0到26之间的一个随机数（不包含26）
+        code = rand * 26;
+        //Math.floor(a)对数字a向下取整，获取到一个小于等于a最近的整数
+        //获取0~25之间任意一个整数
+        code = Math.floor(code);
+        //获取到65~90之间的任意整数
+        code = code + 65;
+
+        code = charindex + 65;
+        charindex = (charindex + 1) % 26
+
+        //按到其他键位就给个随机字母
+        if(keyCode > 90 || keyCode <65){
+            innnerCode = code;
+        }
+
+
+        //把Unicode的十进制编码转化成对应的字符
+        //获取A~Z的任意一个字符
+        var char = String.fromCharCode(innnerCode);
+        //console.log(char);
+        //把字符显示在界面上
+        charBox.innerHTML = char;
+
+        if(lasttimeout != -1){
+            clearTimeout(lasttimeout);
+        }
+
+        var playaudio = function () {
+            var audio = new Audio("audio/" + char.toLowerCase() + ".mp3");
+            audio.play();
+
+            lasttimeout = setTimeout(playaudio, 2000);
+        };
+
+        playaudio();
+
+    }
+
+    window.onkeydown = function(ev){
+        keyUpShow(ev.keyCode);
+    }
+
+    //键盘按下来的事件
+    // window.onkeydown = function (ev) {
+    //     //获取按键所对应的Unicode十进制编码
+    //     var key = ev.keyCode;
+
+    //     //判断按键字母所对应的数字和随机获取的数字是否相等
+    //     if (key == code) {
+    //         //按键正确，正确次数+1
+    //         okCount++;
+    //         //当按键正确时，重新显示新的字符
+    //         show();
+
+    //         //添加正确的动画 通过js给div添加类名
+    //         charBox.className = 'animated zoomIn';
+
+
+    //     } else {
+    //         //按键错误，错误次数+1
+    //         errorCount++;
+    //         //添加按键错误的动画
+    //         charBox.className = 'animated shake error';
+
+    //     }
+    //     showResult();
+    //     //0.5秒之后清楚，动画
+    //     setTimeout(clearAnimated, 500);
+
+    // }
+
+    function clearAnimated() {
+        //负责清楚动画
+        charBox.className = '';
+    }
+
+    //展示计算的结果
+    function showResult() {
+        var rate = 100 * okCount / (okCount + errorCount);
+        //显示正确个数 错误个数 及正确率
+        result.innerHTML = '正确' + okCount + '个' + '错误' + errorCount + '个'
+            + '正确率' + rate.toFixed(2) + '%';//toFixed(2)保留两位小数
+    }
+
+</script>
+</body>
+</html>
