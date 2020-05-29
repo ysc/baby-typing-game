@@ -121,9 +121,6 @@
         //按到其他键位就给个随机字母
 
         if( !(keyCode <= 90 && keyCode >=65) && !(keyCode <= 57 && keyCode >=48)) {
-		        if(lasttimeout != -1){
-		            clearTimeout(lasttimeout);
-		        }
             return;
         }
 
