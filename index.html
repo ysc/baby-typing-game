@@ -119,10 +119,13 @@
         charindex = (charindex + 1) % 26
 
         //按到其他键位就给个随机字母
-        if(keyCode > 90 || keyCode <65){
-            innnerCode = code;
-        }
 
+        if( !(keyCode <= 90 && keyCode >=65) && !(keyCode <= 57 && keyCode >=48)) {
+		        if(lasttimeout != -1){
+		            clearTimeout(lasttimeout);
+		        }
+            return;
+        }
 
         //把Unicode的十进制编码转化成对应的字符
         //获取A~Z的任意一个字符
